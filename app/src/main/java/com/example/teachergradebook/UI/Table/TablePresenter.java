@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.teachergradebook.UI.Base.BaseContract;
 import com.example.teachergradebook.UI.Base.BasePresenter;
+import com.example.teachergradebook.data.model.Grade;
 import com.example.teachergradebook.data.model.Practice;
 import com.example.teachergradebook.data.model.Student;
 import com.example.teachergradebook.data.repository.TableRepository;
@@ -67,7 +68,7 @@ public class TablePresenter extends BasePresenter<TableContract.View>
     @Override
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onAttachView() {
-        //loadTable(false);
+        loadTable(false);
 
     }
 
@@ -99,7 +100,7 @@ public class TablePresenter extends BasePresenter<TableContract.View>
                         repository.loadPractice(onlineRequired)
                                 .subscribeOn(ioScheduler)
                                 .observeOn(uiScheduler),
-                        repository.loadPractice(onlineRequired)
+                        repository.loadGrade(onlineRequired)
                                 .subscribeOn(ioScheduler)
                                 .observeOn(uiScheduler),
                         (a, b, c) -> Combine(a, b,c))
@@ -108,12 +109,8 @@ public class TablePresenter extends BasePresenter<TableContract.View>
         );
 
     }
-    private  ArrayList Combine(List<Student> a, List<Practice> b, List<Practice> c) {
-        for (Student student:a){
-            Log.i("1",""+student.getName());
-        }
+    private  ArrayList Combine(List<Student> a, List<Practice> b, List<Grade> c) {
 
-        Log.i("1",""+b.size());
         ArrayList arrayList = new ArrayList();
         arrayList.add(a);
         arrayList.add(b);
@@ -126,16 +123,23 @@ public class TablePresenter extends BasePresenter<TableContract.View>
         view.stopLoadingIndicator();
         List<Student> listStudent = (List<Student>) arrayList.get(0);
         List<Practice> listPractice = (List<Practice>) arrayList.get(1);
-        List<Practice> listGrade = (List<Practice>) arrayList.get(2);
-
+        List<Grade> listGrade = (List<Grade>) arrayList.get(2);
+        List<List<Grade>> sortlistGrade = SortGrade(listGrade,listStudent,listPractice);
 
         if (listStudent !=null && !listStudent.isEmpty() &&
                 listPractice !=null && !listPractice.isEmpty() &&
                 listGrade !=null && !listGrade.isEmpty() ){
-            view.showTable(listStudent,listPractice,listGrade);
+            view.showTable(listStudent,listPractice,sortlistGrade);
         } else {
             view.showNoDataMessage();
         }
+    }
+
+    private List<List<Grade>> SortGrade(List<Grade> listGrade,
+                                        List<Student> listStudent, List<Practice> listPractice) {
+        List<List<Grade>> newlistGrade = new ArrayList<>();
+        //for (long :)
+        return newlistGrade;
     }
 
 

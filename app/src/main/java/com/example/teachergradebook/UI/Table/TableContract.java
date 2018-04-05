@@ -24,7 +24,7 @@ public interface TableContract extends BaseContract{
 
 
 
-        void showTable(List<Student> students, List<Practice> practices, List<Practice> grades);
+        void showTable(List<Student> students, List<Practice> practices, List<List<Grade>> grades);
 
         void clearQuestions();
 

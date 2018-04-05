@@ -17,6 +17,7 @@ import com.example.teachergradebook.UI.Base.BaseContract;
 import com.example.teachergradebook.UI.Table.TableView.TableViewAdapter;
 import com.example.teachergradebook.UI.Table.TableView.TableViewListener;
 import com.example.teachergradebook.UI.Base.BaseActivity;
+import com.example.teachergradebook.data.model.Grade;
 import com.example.teachergradebook.data.model.Practice;
 import com.example.teachergradebook.data.model.Student;
 
@@ -152,13 +153,10 @@ public class MainActivity extends BaseActivity implements TableContract.View {
     }
 
     @Override
-    public void showTable(List<Student> students, List<Practice> practices, List<Practice> grades) {
-        List<List<Practice>> mCellList = new ArrayList<List<Practice>>();
-        mCellList.add(grades);
-        mCellList.add(grades);
-        Log.i("1","sadasd");
-        mTableViewAdapter.setAllItems(practices,students,mCellList);
-        mCellList = null;
+    public void showTable(List<Student> students, List<Practice> practices, List<List<Grade>> grades) {
+
+        mTableViewAdapter.setAllItems(practices,students,grades);
+
 
     }
 

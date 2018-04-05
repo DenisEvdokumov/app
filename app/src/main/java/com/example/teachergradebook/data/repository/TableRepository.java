@@ -74,7 +74,9 @@ public class TableRepository implements TableDataSource {
 
     @Override
     public Flowable<List<Grade>> loadGrade(boolean forceRemote) {
-        return null;
+
+        return localTableDataSource.loadGrade(forceRemote)
+                .take(1);
     }
 
     @Override
