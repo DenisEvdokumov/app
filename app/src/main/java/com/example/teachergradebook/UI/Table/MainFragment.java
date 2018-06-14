@@ -73,9 +73,9 @@ public class MainFragment extends Fragment {
         TableView tableView = new TableView(getContext());
 
         // Set adapter
-        mTableViewAdapter = new TableViewAdapter(getContext());
-        tableView.setAdapter(mTableViewAdapter);
-        //mTableViewAdapter.setRowHeaderItems();
+//        mTableViewAdapter = new TableViewAdapter(getContext(),presenter);
+//        tableView.setAdapter(mTableViewAdapter);
+//        //mTableViewAdapter.setRowHeaderItems();
 
         // Disable shadow
         //tableView.getSelectionHandler().setShadowEnabled(false);

@@ -1,7 +1,5 @@
 package com.example.teachergradebook.data.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -21,6 +19,31 @@ public class StudentGroup {
 
     @SerializedName("name")
     private String name;
+
+    @SerializedName("predmetId")
+
+    private long predmetId;
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    @SerializedName("userId")
+
+    private long userId;
+
+    public long getPredmetId() {
+        return predmetId;
+    }
+
+    public void setPredmetId(long predmetId) {
+        this.predmetId = predmetId;
+    }
+
 
     public long getId() {
         return id;

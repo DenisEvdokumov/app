@@ -2,6 +2,8 @@ package com.example.teachergradebook.data;
 
 import com.example.teachergradebook.data.repository.local.Local;
 import com.example.teachergradebook.data.repository.local.LocalTableDataSource;
+import com.example.teachergradebook.data.repository.remote.Remote;
+import com.example.teachergradebook.data.repository.remote.RemoteTableDataSource;
 
 import javax.inject.Singleton;
 
@@ -21,12 +23,12 @@ public class TableRepositoryModule {
         return localTableDataSource;
     }
 
-//    @Provides
-//    @Remote
-//    @Singleton
-//    public TableDataSource provideRemoteDataSource(QuestionRemoteDataSource questionRemoteDataSource) {
-//        return questionRemoteDataSource;
-//    }
+    @Provides
+    @Remote
+    @Singleton
+    public RemoteTableDataSource provideRemoteDataSource(RemoteTableDataSource remoteTableDataSource) {
+        return remoteTableDataSource;
+    }
 
 
 }

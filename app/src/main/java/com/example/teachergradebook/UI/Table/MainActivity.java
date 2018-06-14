@@ -1,5 +1,6 @@
 package com.example.teachergradebook.UI.Table;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter;
@@ -33,18 +35,21 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements TableContract.View {
 
-    @BindView(R.id.refresh) SwipeRefreshLayout refreshLayout;
+//    @BindView(R.id.refresh) SwipeRefreshLayout refreshLayout;
 
     private List<com.example.teachergradebook.data.model.Student> mRowHeaderList;
     private List<Practice> mColumnHeaderList;
 
 
 
+    private long STUDENTGROUPID = 1;
+    private long PREDMETID= 1;
 
     private AbstractTableAdapter mTableViewAdapter;
     private TableView mTableView;
     private Filter mTableFilter; // This is used for filtering the table.
     private Pagination mPagination; // This is used for paginating the table.
+    String token;
 
     @Inject TablePresenter presenter;
 
@@ -54,9 +59,20 @@ public class MainActivity extends BaseActivity implements TableContract.View {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         ButterKnife.bind(this);
         initPresenter();
-        SetupTable();
+
+        Intent intent = getIntent();
+        token = intent.getExtras().getString("token"," ");
+        presenter.token = token;
+        presenter.groupId = intent.getExtras().getString("groupId"," ");
+        presenter.courceId = intent.getExtras().getString("courceId"," ");
+
+                SetupTable();
+
+        presenter.loadTable(true);
 
     }
 
@@ -83,10 +99,11 @@ public class MainActivity extends BaseActivity implements TableContract.View {
         TableView tableView = new TableView(getApplicationContext());
 
         // Set adapter
-        mTableViewAdapter = new TableViewAdapter(getApplicationContext());
+        mTableViewAdapter = new TableViewAdapter(getApplicationContext(),presenter);
         tableView.setAdapter(mTableViewAdapter);
 
-        refreshLayout.setOnRefreshListener(() -> presenter.loadTable(false));
+//        refreshLayout.setOnRefreshListener(() -> presenter.loadTable(false));
+
         //mTableViewAdapter.setRowHeaderItems();
 
         // Disable shadow
@@ -106,6 +123,7 @@ public class MainActivity extends BaseActivity implements TableContract.View {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add("Добавить студента");
         menu.add("Добавить практику");
+        menu.add("обновить таблицу");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -113,10 +131,14 @@ public class MainActivity extends BaseActivity implements TableContract.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getTitle().toString()){
             case "Добавить студента":
-                presenter.addStudent();
+                presenter.addStudent("Petya",STUDENTGROUPID++);
                 break;
             case "Добавить практику":
-                presenter.addPractice();
+                presenter.addPractice(STUDENTGROUPID,PREDMETID++);
+                break;
+            case "обновить таблицу":
+                //TODO this
+//                presenter.loadTable(false);
                 break;
 
         }
@@ -125,7 +147,7 @@ public class MainActivity extends BaseActivity implements TableContract.View {
 
     @Override
     protected void onDestroy() {
-
+        presenter.logout(token);
         super.onDestroy();
     }
 
@@ -156,6 +178,7 @@ public class MainActivity extends BaseActivity implements TableContract.View {
     public void showTable(List<Student> students, List<Practice> practices, List<List<Grade>> grades) {
 
         mTableViewAdapter.setAllItems(practices,students,grades);
+        Toast.makeText(this,"refresh",Toast.LENGTH_SHORT).show();
 
 
     }
@@ -167,6 +190,7 @@ public class MainActivity extends BaseActivity implements TableContract.View {
 
     @Override
     public void showNoDataMessage() {
+        Log.i("1","nodata");
 
     }
 
@@ -181,9 +205,9 @@ public class MainActivity extends BaseActivity implements TableContract.View {
 
     @Override
     public void stopLoadingIndicator() {
-        if (refreshLayout.isRefreshing()) {
-            refreshLayout.setRefreshing(false);
-        }
+//        if (refreshLayout.isRefreshing()) {
+//            refreshLayout.setRefreshing(false);
+//        }
 
     }
 

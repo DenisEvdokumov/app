@@ -13,21 +13,27 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  * Created by Денис on 17.03.2018.
  */
 
-@Entity(tableName = Config.GRADE_TABLE_NAME,
-        foreignKeys = {
-                @ForeignKey(
-                        entity = Practice.class,
-                        parentColumns = "id",
-                        childColumns = "practiceId",
-                        onDelete = CASCADE
-                ),
-                @ForeignKey(
-                        entity = Student.class,
-                        parentColumns = "id",
-                        childColumns = "studentId",
-                        onDelete = CASCADE)
-        })
+@Entity(tableName = Config.GRADE_TABLE_NAME
+//        foreignKeys = {
+//                @ForeignKey(
+//                        entity = Practice.class,
+//                        parentColumns = "id",
+//                        childColumns = "practiceId",
+//                        onDelete = CASCADE
+//                ),
+//                @ForeignKey(
+//                        entity = Student.class,
+//                        parentColumns = "id",
+//                        childColumns = "studentId",
+//                        onDelete = CASCADE)
+//        }
+ )
 public class Grade {
+
+    public Grade (long practiceId,long studentId){
+        this.studentId = studentId;
+        this.practiceId = practiceId;
+    }
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     private long id;

@@ -6,7 +6,7 @@
     android:background="@color/cell_background_color"
     android:windowSoftInputMode="adjustResize"
     android:transcriptMode="alwaysScroll"
-    android:layout_width="@dimen/row_header_width"
+    android:layout_width="wrap_content"
     android:layout_height="@dimen/cell_height">
 
     <LinearLayout

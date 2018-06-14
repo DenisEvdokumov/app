@@ -31,7 +31,9 @@ public class DataBaseModule {
     @Provides
     @Singleton
     TeacherGradeDb provideTeacherGradeDao(Context context, @Named(DATABASE) String databaseName) {
-        return Room.databaseBuilder(context, TeacherGradeDb.class, databaseName).build();
+        return Room.databaseBuilder(context, TeacherGradeDb.class, databaseName)
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
     @Provides

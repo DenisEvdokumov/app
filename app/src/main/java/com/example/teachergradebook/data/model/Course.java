@@ -6,14 +6,20 @@ import android.arch.persistence.room.PrimaryKey;
 import com.example.teachergradebook.data.Config;
 import com.google.gson.annotations.SerializedName;
 
+import javax.annotation.Nonnegative;
+
+import io.reactivex.annotations.NonNull;
+
 /**
  * Created by Денис on 17.03.2018.
  */
 
 @Entity(tableName = Config.COURSE_TABLE_NAME)
 public class Course {
-    @PrimaryKey
+
+    @PrimaryKey()
     @SerializedName("id")
+
     private long id;
 
     @SerializedName("name")

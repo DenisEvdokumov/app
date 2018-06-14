@@ -7,12 +7,15 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter;
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
 
 import com.example.teachergradebook.R;
 
+import com.example.teachergradebook.UI.Table.TablePresenter;
+import com.example.teachergradebook.data.model.Grade;
 import com.example.teachergradebook.data.model.Practice;
 import com.example.teachergradebook.data.model.Student;
 import com.example.teachergradebook.UI.Table.holder.CellViewHolder;
@@ -25,7 +28,7 @@ import com.example.teachergradebook.UI.Table.holder.RowHeaderViewHolder;
  */
 
 
-public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Practice> {
+public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Grade> {
 
     // Student View Types by Column Position
     private static final int MOOD_CELL_TYPE = 1;
@@ -33,9 +36,11 @@ public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Pr
     // add new one if it necessary..
 
     private static final String LOG_TAG = TableViewAdapter.class.getSimpleName();
+    private TablePresenter presenter;
 
-    public TableViewAdapter(Context p_jContext) {
+    public TableViewAdapter(Context p_jContext, TablePresenter presenter) {
         super(p_jContext);
+        this.presenter = presenter;
 
     }
 
@@ -43,10 +48,13 @@ public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Pr
     @Override
     public RecyclerView.ViewHolder onCreateCellViewHolder(ViewGroup parent, int viewType) {
         View layout;
-
+        EditText editText;
         layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_cell_layout,
                         parent, false);
-        return new CellViewHolder(layout, new MyCustomEditTextListener());
+        editText = layout.findViewById(R.id.cell_data);
+       // editText.addTextChangedListener(new MyCustomEditTextListener(editText));
+
+        return new CellViewHolder(layout);
 
 
     }
@@ -55,14 +63,17 @@ public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Pr
     @Override
     public void onBindCellViewHolder(AbstractViewHolder holder, Object cellItemModel, int
             columnPosition, int rowPosition) {
-        Practice practice = (Practice) cellItemModel;
-
+        Grade grade = (Grade) cellItemModel;
 
 //             Get the holder to update student item text
 
         CellViewHolder viewHolder = (CellViewHolder) holder;
-       // viewHolder.myCustomEditTextListener.updatePosition(holder.getAdapterPosition());
-        viewHolder.setData(practice.getName());
+
+
+//        viewHolder.cell_textview
+
+        viewHolder.setData(grade.getName());
+        viewHolder.cell_textview.addTextChangedListener(new MyCustomEditTextListener(columnPosition,rowPosition));
 
     }
 
@@ -163,11 +174,21 @@ public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Pr
     }
 
     public class MyCustomEditTextListener implements TextWatcher {
-        private int position;
+        private int columnPosition;
+        private int rawPosition;
+        EditText editText;
+        String s;
 
-        public void updatePosition(int position) {
-            this.position = position;
+        public MyCustomEditTextListener(EditText editText) {
+            this.editText= editText;
         }
+
+        public MyCustomEditTextListener(int columnPosition, int rowPosition) {
+            this.columnPosition = columnPosition;
+            this.rawPosition = rowPosition;
+        }
+
+
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -178,11 +199,16 @@ public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Pr
         public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             //TODO  mDataset[position] = charSequence.toString();
 
+            s = charSequence.toString();
+
 
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
+            Grade grade = getCellItem(columnPosition,rawPosition);
+            grade.setName(s);
+            presenter.updateGrade(grade);
             // no op
         }
     }

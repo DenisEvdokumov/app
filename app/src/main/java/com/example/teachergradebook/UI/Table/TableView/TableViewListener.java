@@ -3,6 +3,8 @@ package com.example.teachergradebook.UI.Table.TableView;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evrencoskun.tableview.TableView;

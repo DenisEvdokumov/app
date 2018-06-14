@@ -1,7 +1,6 @@
 package com.example.teachergradebook.UI.Table;
 
 import com.example.teachergradebook.UI.Base.BaseContract;
-import com.example.teachergradebook.UI.Base.BasePresenter;
 import com.example.teachergradebook.data.model.Grade;
 import com.example.teachergradebook.data.model.Practice;
 import com.example.teachergradebook.data.model.Student;
@@ -48,8 +47,11 @@ public interface TableContract extends BaseContract{
         void deleteGroup(Group group);
 
         void addGrade(String grade);
+        void updateGrade(Grade grade);
 
-        void addStudent();
-        void addPractice();
+        void addStudent(String name,long groupId);
+        void addPractice(long studentGroupId,long predmetId);
+
+        void logout(String token);
     }
 }

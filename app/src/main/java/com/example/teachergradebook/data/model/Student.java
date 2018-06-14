@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
 import com.evrencoskun.tableview.filter.IFilterableModel;
 import com.evrencoskun.tableview.sort.ISortableModel;
 import com.example.teachergradebook.data.Config;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -20,17 +21,20 @@ public class Student implements  IFilterableModel {
     private String mFilterKeyword;
 
 
-    public Student (){
-
+    public Student (String name,long group_id){
+        this.name = name;
+        this.group_id = group_id;
     }
 
     @SerializedName("id")
     @PrimaryKey(autoGenerate = true)
+    @Expose
     private int id;
 
 
 
     @SerializedName("name")
+    @Expose
     private String name;
 
     @SerializedName("group_id")

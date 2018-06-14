@@ -17,13 +17,13 @@ public class CellViewHolder extends AbstractViewHolder {
 
     public  EditText cell_textview;
     public  LinearLayout cell_container;
-    public TableViewAdapter.MyCustomEditTextListener myCustomEditTextListener;
+   // public TableViewAdapter.MyCustomEditTextListener myCustomEditTextListener;
 
-    public CellViewHolder(View itemView, TableViewAdapter.MyCustomEditTextListener myCustomEditTextListener) {
+    public CellViewHolder(View itemView) {
         super(itemView);
         this.cell_textview = (EditText) itemView.findViewById(R.id.cell_data);
         this.cell_container = (LinearLayout) itemView.findViewById(R.id.cell_container);
-        this.cell_textview.addTextChangedListener(myCustomEditTextListener);
+
     }
 
     public void setData(Object data) {
