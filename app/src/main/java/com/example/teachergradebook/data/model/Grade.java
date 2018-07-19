@@ -30,10 +30,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  )
 public class Grade {
 
-    public Grade (long practiceId,long studentId){
-        this.studentId = studentId;
-        this.practiceId = practiceId;
-    }
+
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     private long id;

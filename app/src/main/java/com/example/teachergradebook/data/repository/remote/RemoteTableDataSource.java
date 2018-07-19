@@ -17,6 +17,7 @@ import com.example.teachergradebook.data.model.StudentGroup;
 import com.example.teachergradebook.data.model.User;
 import com.example.teachergradebook.data.repository.TableDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -50,6 +51,31 @@ public class RemoteTableDataSource implements TableDataSource {
 
     @Override
     public Completable addPredmet(List<Predmet> predmets) {
+        return null;
+    }
+
+    @Override
+    public Completable addStudentGroup(ArrayList<StudentGroup> studentGroupREsp) {
+        return null;
+    }
+
+    @Override
+    public Single<List<StudentGroup>> loadStudentGroupsOfline(boolean onlineRequired, String token, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Completable saveStudet(List<Student> listStudent) {
+        return null;
+    }
+
+    @Override
+    public Completable savePractice(List<Practice> listPractice) {
+        return null;
+    }
+
+    @Override
+    public Completable saveGrade(List<Grade> listGrade) {
         return null;
     }
 

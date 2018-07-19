@@ -16,6 +16,7 @@ import com.example.teachergradebook.data.model.Student;
 import com.example.teachergradebook.data.model.StudentGroup;
 import com.example.teachergradebook.data.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -29,7 +30,7 @@ import io.reactivex.Single;
 @Dao
 public interface StudentGroupDao {
     @Query("SELECT * FROM " + Config.GROUP_TABLE_NAME)
-    Flowable<List<StudentGroup>> getAllStudentGroup();
+    Single<List<StudentGroup>> getAllStudentGroup();
 
     @Query("SELECT * FROM " + Config.PRACTICE_TABLE_NAME)
     Flowable <List<Practice>> getAllPractice();
@@ -62,8 +63,8 @@ public interface StudentGroupDao {
     @Query("SELECT * FROM " + Config.COURSE_TABLE_NAME)
     Flowable<List<Course>> getAllCourse();
 
-    @Query("SELECT * FROM " + Config.GRADE_TABLE_NAME)
-    Flowable<List<Grade>> getAllGrade();
+    @Query("SELECT * FROM " + Config.GRADE_TABLE_NAME +  " WHERE practiceId == :courseId " + "AND" + " studentId == :courseId")
+    Flowable<List<Grade>> getAllGrade(String courseId,String groupId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Grade grade);
@@ -78,11 +79,23 @@ public interface StudentGroupDao {
     Single<User> login(String login, String password);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Flowable<Long> saveUser(User user);
+    Long saveUser(User user);
 
     @Query("SELECT * FROM " + Config.PREDMET_TABLE_NAME + " WHERE userId == :userId ")
     Single<List<Predmet>> getAllPredmet(Long userId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addPredmet(List<Predmet> predmets);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void addStudentGroup(ArrayList<StudentGroup> studentGroupREsp);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void saveStudent(List<Student> listStudent);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void saveGrade(List<Grade> listGrade);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void savePractice(List<Practice> listPractice);
 }

@@ -208,6 +208,7 @@ public class TableViewAdapter extends AbstractTableAdapter<Practice, Student, Gr
         public void afterTextChanged(Editable editable) {
             Grade grade = getCellItem(columnPosition,rawPosition);
             grade.setName(s);
+
             presenter.updateGrade(grade);
             // no op
         }

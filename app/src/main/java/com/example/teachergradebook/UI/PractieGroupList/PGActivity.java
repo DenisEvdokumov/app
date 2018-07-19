@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Switch;
@@ -15,17 +12,12 @@ import android.widget.Toast;
 
 import com.example.teachergradebook.R;
 
-import com.example.teachergradebook.UI.Authentication.AuthActivity;
 import com.example.teachergradebook.UI.Base.BaseActivity;
 import com.example.teachergradebook.UI.Base.BaseContract;
 import com.example.teachergradebook.UI.Table.MainActivity;
 import com.example.teachergradebook.data.model.Predmet;
-import com.example.teachergradebook.data.model.Res;
-import com.example.teachergradebook.data.model.ResList;
-import com.example.teachergradebook.data.model.Student;
 import com.example.teachergradebook.data.model.StudentGroup;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,12 +32,20 @@ import butterknife.ButterKnife;
 public class PGActivity extends BaseActivity implements PGContract.View {
 
     @BindView(R.id.expListView)    ExpandableListView expandableListView;
-    @BindView(R.id.switch1)    Switch onlineSwitch;
+   @BindView(R.id.switch1)
+     Switch onlineSwitch;
 
+     Map<String,Predmet> predmetMap = new HashMap<String, Predmet>();
+     Map<String,StudentGroup> stringStudentGroupMap = new HashMap<String, StudentGroup>();
+    ArrayList<ArrayList<Map<String, String>>> сhildDataList = new ArrayList<>();
+    ArrayList<Map<String, String>> groupDataList = new ArrayList<>();
 
     Long userId;
     String token,password,login;
     Boolean onlineRequired=false;
+
+
+
 
     @Inject
     PGPresenter presenter;
@@ -63,8 +63,8 @@ public class PGActivity extends BaseActivity implements PGContract.View {
         onlineRequired = intent.getExtras().getBoolean("onlineRequired",false);
 
 
-
-        onlineSwitch.setChecked(onlineRequired);
+        ButterKnife.bind(this);
+      onlineSwitch.setChecked(onlineRequired);
         onlineSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -76,13 +76,15 @@ public class PGActivity extends BaseActivity implements PGContract.View {
             }
         });
 
-        ButterKnife.bind(this);
+
         initPresenter();
         presenter.loadTable(onlineRequired,token,userId);
 
 
-    }
 
+
+
+    }
 
 
 
@@ -124,22 +126,11 @@ public class PGActivity extends BaseActivity implements PGContract.View {
 
 
     @Override
-    public void showTable(List<Predmet> predmets) {
-        for(Predmet predmet : predmets){
-            if(predmet.getUserId()!=userId) predmets.remove(predmet);
-        }
-        List<StudentGroup> groups = new ArrayList<>();
-        for(int i=0;i<predmets.size()*3;i++){
-            StudentGroup studentGroup = new StudentGroup();
-            studentGroup.setName("IO-"+i);
-            studentGroup.setId(i);
-            groups.add(studentGroup);
-
-        }
+    public void showTable(List<Predmet> predmets,List<StudentGroup> studentGroups) {
 
         Map<String, String> map;
         // коллекция для групп
-        ArrayList<Map<String, String>> groupDataList = new ArrayList<>();
+
         // заполняем коллекцию групп из массива с названиями групп
 
         for (Predmet predmet : predmets) {
@@ -155,22 +146,26 @@ public class PGActivity extends BaseActivity implements PGContract.View {
         int groupTo[] = new int[] { android.R.id.text1 };
 
         // создаем общую коллекцию для коллекций элементов
-        ArrayList<ArrayList<Map<String, String>>> сhildDataList = new ArrayList<>();
+
 
         // в итоге получится сhildDataList = ArrayList<сhildDataItemList>
 
         // создаем коллекцию элементов для  групп
         ArrayList<Map<String, String>> сhildDataItemList;
         // заполняем список атрибутов для каждого элемента
-        for (int i =0;i<predmets.size();i++) {
+        for (Predmet predmet : predmets) {
             // создаем коллекцию элементов для N группы
+            predmetMap.put(predmet.getName(),predmet);
             сhildDataItemList = new ArrayList<>();
-            for (int j=0;j<3;j++) {
-                groups.get(i*j).setPredmetId(predmets.get(i).getId());
-                //studentGroup.setPredmetId(resList.getData().get(i).getId());
-                map = new HashMap<>();
-                map.put("monthName", groups.get(i*j).getName()); // название месяца
-                сhildDataItemList.add(map);
+            for (StudentGroup studentGroup :studentGroups) {
+//                groups.get(i*j).setPredmetId(predmets.get(i).getId());
+                //studentGroup.setPredmetId(resList.getData().get(i).getId())
+                if(studentGroup.getPredmetId()==Long.valueOf(predmet.getId())) {
+                    stringStudentGroupMap.put(studentGroup.getName(),studentGroup);
+                    map = new HashMap<>();
+                    map.put("monthName", studentGroup.getName()); // название месяца
+                    сhildDataItemList.add(map);
+                }
             }
             // добавляем в коллекцию коллекций
             сhildDataList.add(сhildDataItemList);
@@ -196,20 +191,17 @@ public class PGActivity extends BaseActivity implements PGContract.View {
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(PGActivity.this,groupPosition + " " + childPosition,Toast.LENGTH_SHORT).show();
-
+                //Toast.makeText(PGActivity.this,groupPosition + " " + childPosition,Toast.LENGTH_SHORT).show();
+                Log.i("1",сhildDataList.get(groupPosition).get(childPosition).get("monthName")+ " " + groupDataList.get(groupPosition).get("groupName"));
                 Intent intent = new Intent(PGActivity.this, MainActivity.class);
-                        if(childPosition==0){
-                            intent.putExtra("groupId","1");
-                        }
-                        if(childPosition==1){
-                            intent.putExtra("groupId","8");
-                        }
-                        if(childPosition==2){
-                            intent.putExtra("groupId","15");
-                        }
-                            intent.putExtra("courceId","1");
+
+                            intent.putExtra("groupId",
+                                    stringStudentGroupMap.get(сhildDataList.get(groupPosition).get(childPosition).get("monthName")).getId());
+
+                            intent.putExtra("predmetId",
+                                    predmetMap.get(groupDataList.get(groupPosition).get("groupName")).getId());
                             intent.putExtra("token",token);
+                            intent.putExtra("onlineRequired",onlineRequired);
                 startActivity(intent);
                // presenter.logout(token);
                 return false;

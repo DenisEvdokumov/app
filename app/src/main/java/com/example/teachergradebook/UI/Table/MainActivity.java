@@ -1,7 +1,6 @@
 package com.example.teachergradebook.UI.Table;
 
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,12 +23,10 @@ import com.example.teachergradebook.data.model.Practice;
 import com.example.teachergradebook.data.model.Student;
 
 import java.security.acl.Group;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
@@ -50,7 +47,7 @@ public class MainActivity extends BaseActivity implements TableContract.View {
     private Filter mTableFilter; // This is used for filtering the table.
     private Pagination mPagination; // This is used for paginating the table.
     String token;
-
+    Boolean onlineRequired;
     @Inject TablePresenter presenter;
 
 
@@ -67,12 +64,14 @@ public class MainActivity extends BaseActivity implements TableContract.View {
         Intent intent = getIntent();
         token = intent.getExtras().getString("token"," ");
         presenter.token = token;
-        presenter.groupId = intent.getExtras().getString("groupId"," ");
-        presenter.courceId = intent.getExtras().getString("courceId"," ");
+        presenter.groupId = String.valueOf(intent.getExtras().getLong("groupId"));
+        presenter.predmetId = intent.getExtras().getString("predmetId","1");
+        onlineRequired = intent.getExtras().getBoolean("onlineRequired",false);
+        presenter.onlineRequired = onlineRequired;
 
                 SetupTable();
 
-        presenter.loadTable(true);
+        presenter.loadTable(onlineRequired);
 
     }
 
@@ -147,7 +146,7 @@ public class MainActivity extends BaseActivity implements TableContract.View {
 
     @Override
     protected void onDestroy() {
-        presenter.logout(token);
+        //presenter.logout(token);
         super.onDestroy();
     }
 

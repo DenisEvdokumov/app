@@ -19,6 +19,7 @@ import com.example.teachergradebook.data.repository.local.LocalTableDataSource;
 import com.example.teachergradebook.data.repository.remote.Remote;
 import com.example.teachergradebook.data.repository.remote.RemoteTableDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -181,7 +182,7 @@ public class TableRepository implements TableDataSource {
     public Completable updateGrade(Grade grade) {
         return Completable.fromAction(() ->{
             localTableDataSource.updateGrade(grade)
-                    .subscribe(()-> Log.i("1","addGradeTableRepository "),
+                    .subscribe(()-> Log.i("1","upgradeGradeTableRepository "),
                             throwable -> Log.i("1", "Unable to update username" + throwable));
 
 
@@ -247,6 +248,31 @@ public class TableRepository implements TableDataSource {
     @Override
     public Completable addPredmet(List<Predmet> predmets) {
         return localTableDataSource.addPredmet(predmets);
+    }
+
+    @Override
+    public Completable addStudentGroup(ArrayList<StudentGroup> studentGroupREsp) {
+        return localTableDataSource.addStudentGroup(studentGroupREsp);
+    }
+
+    @Override
+    public Single<List<StudentGroup>> loadStudentGroupsOfline(boolean onlineRequired, String token, Long userId) {
+        return localTableDataSource.loadStudentGroupsOfline(onlineRequired,token,userId);
+    }
+
+    @Override
+    public Completable saveStudet(List<Student> listStudent) {
+        return localTableDataSource.saveStudet(listStudent);
+    }
+
+    @Override
+    public Completable savePractice(List<Practice> listPractice) {
+        return localTableDataSource.savePractice(listPractice);
+    }
+
+    @Override
+    public Completable saveGrade(List<Grade> listGrade) {
+        return localTableDataSource.saveGrade(listGrade);
     }
 
 

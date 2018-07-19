@@ -15,13 +15,18 @@ import com.example.teachergradebook.data.model.StudentGroup;
 import com.example.teachergradebook.data.model.User;
 import com.example.teachergradebook.data.repository.TableDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Денис on 14.03.2018.
@@ -54,12 +59,12 @@ public class LocalTableDataSource implements TableDataSource {
 
     @Override
     public Flowable<List<StudentGroup>> loadStudentGroups(boolean forceRemote) {
-        return studentGroupDao.getAllStudentGroup();
+        return null;
     }
 
     @Override
     public Flowable<List<Grade>> loadGrade(boolean forceRemote,String token,String courseId,String groupId) {
-        return studentGroupDao.getAllGrade();
+        return studentGroupDao.getAllGrade(courseId,groupId);
     }
 
     @Override
@@ -169,8 +174,14 @@ public class LocalTableDataSource implements TableDataSource {
     @Override
     public Flowable<Long> saveUser(User user) {
 
-        return studentGroupDao.saveUser(user);
+        return Flowable.fromCallable(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                return studentGroupDao.saveUser(user);
+            }
 
+
+            });
     }
 
     @Override
@@ -184,6 +195,39 @@ public class LocalTableDataSource implements TableDataSource {
             studentGroupDao.addPredmet(predmets);
         });
 
+    }
+
+    @Override
+    public Completable addStudentGroup(ArrayList<StudentGroup> studentGroupREsp) {
+        return Completable.fromAction(() -> {
+            studentGroupDao.addStudentGroup(studentGroupREsp);
+        });
+    }
+
+    @Override
+    public Single<List<StudentGroup>> loadStudentGroupsOfline(boolean onlineRequired, String token, Long userId) {
+        return studentGroupDao.getAllStudentGroup();
+    }
+
+    @Override
+    public Completable saveStudet(List<Student> listStudent) {
+        return Completable.fromAction(() -> {
+            studentGroupDao.saveStudent(listStudent);
+        });
+    }
+
+    @Override
+    public Completable savePractice(List<Practice> listPractice) {
+        return Completable.fromAction(() -> {
+            studentGroupDao.savePractice(listPractice);
+        });
+    }
+
+    @Override
+    public Completable saveGrade(List<Grade> listGrade) {
+        return Completable.fromAction(() -> {
+            studentGroupDao.saveGrade(listGrade);
+        });
     }
 
 

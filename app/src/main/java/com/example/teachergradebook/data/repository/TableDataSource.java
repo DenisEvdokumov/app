@@ -13,6 +13,7 @@ import com.example.teachergradebook.data.model.Student;
 import com.example.teachergradebook.data.model.StudentGroup;
 import com.example.teachergradebook.data.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -65,4 +66,14 @@ public interface TableDataSource {
     Single<List<Predmet>> loadPredmetOFline(boolean onlineRequired, String token, Long userId);
 
     Completable addPredmet(List<Predmet> predmets);
+
+    Completable addStudentGroup(ArrayList<StudentGroup> studentGroupREsp);
+
+    Single<List<StudentGroup>> loadStudentGroupsOfline(boolean onlineRequired, String token, Long userId);
+
+    Completable saveStudet(List<Student> listStudent);
+
+    Completable savePractice(List<Practice> listPractice);
+
+    Completable saveGrade(List<Grade> listGrade);
 }
